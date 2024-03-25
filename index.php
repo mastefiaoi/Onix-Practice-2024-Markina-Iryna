@@ -19,9 +19,23 @@ function validateYear($year) {
     return is_numeric($year) && intval($year) > 0;
 }
 
+function validateGenres($genres) {
+    $genreArray = explode(',', $genres);
+    foreach ($genreArray as $genre) {
+        if (empty(trim($genre))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 $title = prompt("Title: ");
 $author = prompt("Author: ");
-$genre = prompt("Genre: ");
+$genres = prompt("Genres (separate multiple genres with commas): ");
+while (!validateGenres($genres)) {
+    echo "Please enter at least one genre, separated by commas: ";
+    $genres = trim(fgets(STDIN));
+}
 $year = prompt("Year of publication: ");
 while (!validateYear($year)) {
     echo "Please enter a valid year (a positive integer): ";
@@ -50,7 +64,7 @@ $content = <<<MD
 ---
 Title: "$title"
 Author: "$author"
-Genre: "$genre"
+Genre: "$genres"
 Year of publication: "$year"
 Commentary to the book: "$commentary"
 ---

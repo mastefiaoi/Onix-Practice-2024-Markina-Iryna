@@ -5,17 +5,29 @@ echo "*      Enter this information in the appropriate fields     *\n";
 echo "*            Do not leave input fields blank!               *\n";
 echo "*************************************************************\n\n";
 
-echo "Title:";
-$title = trim(fgets(STDIN));
+function prompt($message) {
+    echo $message;
+    $input = trim(fgets(STDIN));
+    while (empty($input)) {
+        echo "This field cannot be empty. Please, enter again:\n";
+        $input = trim(fgets(STDIN));
+    }
+    return $input;
+}
 
-echo "Author: ";
-$author = trim(fgets(STDIN));
+function validateYear($year) {
+    return is_numeric($year) && intval($year) > 0;
+}
 
-echo "Year of publication: ";
-$year = trim(fgets(STDIN));
-
-echo "Commentary to the book: ";
-$commentary = trim(fgets(STDIN));
+$title = prompt("Title: ");
+$author = prompt("Author: ");
+$genre = prompt("Genre: ");
+$year = prompt("Year of publication: ");
+while (!validateYear($year)) {
+    echo "Please enter a valid year (a positive integer): ";
+    $year = trim(fgets(STDIN));
+}
+$commentary = prompt("Commentary to the book: ");
 
 $currentDirectory = getcwd();
 $outputDirectory = isset($argv[1]) ? $argv[1] : $currentDirectory;
@@ -38,6 +50,7 @@ $content = <<<MD
 ---
 Title: "$title"
 Author: "$author"
+Genre: "$genre"
 Year of publication: "$year"
 Commentary to the book: "$commentary"
 ---
